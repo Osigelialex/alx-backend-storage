@@ -14,9 +14,9 @@ BEGIN
   IF project_id IS NULL 
   THEN
     INSERT INTO projects (name) VALUE (project_name);
-  ELSE
-    INSERT INTO corrections (user_id, project_id, score) VALUES (user_id, project_id, score);
   END IF;
+
+  INSERT INTO corrections (user_id, project_id, score) VALUES (user_id, project_id, score);
 END $$
 
 DELIMITER ;
