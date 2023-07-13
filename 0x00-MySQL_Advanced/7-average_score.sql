@@ -5,7 +5,7 @@ DELIMITER $$
 CREATE PROCEDURE ComputeAverageScoreForUser (IN user_id INT)
 BEGIN
   DECLARE average_score DECIMAL;
-  SELECT AVG(score) INTO average_score WHERE user_id = user_id;
+  SELECT AVG(score) INTO average_score FROM users WHERE user_id = user_id;
   UPDATE users SET average_score = average_score WHERE id = user_id;
 END $$
 
