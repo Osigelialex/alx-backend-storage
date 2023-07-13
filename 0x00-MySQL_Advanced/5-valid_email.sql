@@ -7,12 +7,11 @@ DROP TRIGGER IF EXISTS valid_email;
 -- create trigger
 DELIMITER $$
 CREATE TRIGGER valid_email
-AFTER UPDATE ON users
+BEFORE UPDATE ON users
 FOR EACH ROW
 BEGIN
-IF NEW.email <> OLD.email
-THEN
-UPDATE users SET valid_email = DEFAULT WHERE email = OLD.email;
-END IF;
+  IF NEW.email <> OLD.email THEN
+    UPDATE users SET valid_email = DEFAULT WHERE email = OLD.email;
+  END IF;
 END $$
 DELIMITER ;
