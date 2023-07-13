@@ -8,7 +8,7 @@ CREATE PROCEDURE AddBonus (
 )
 
 BEGIN
-  DECLARE project_id INT,
+  DECLARE project_id INT;
   SELECT id INTO project_id FROM projects WHERE name = project_name;
 
   IF project_id IS NULL 
