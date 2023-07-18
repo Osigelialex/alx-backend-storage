@@ -11,7 +11,7 @@ def schools_by_topic(mongo_collection, topic):
       mongo_collection (object): mongodb collection object
       topic (string): topic searched for
   """
-  result = mongo_collection.find_all(
+  result = mongo_collection.find(
     {"topic": topic}
   )
   return result
