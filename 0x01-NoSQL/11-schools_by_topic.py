@@ -11,6 +11,6 @@ def schools_by_topic(mongo_collection, topic):
       mongo_collection (object): mongodb collection object
       topic (string): topic searched for
   """
-  schools = mongo_collection.find({"topics": {"$in": topic}})
-  result = [school for school in schools]
-  return result
+  return mongo_collection.find(
+    {"topics": topic}
+  )
