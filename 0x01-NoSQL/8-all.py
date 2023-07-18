@@ -12,7 +12,4 @@ def list_all(mongo_collection):
       mongo_collection (collection object):
         collection object to get documents from
     """
-    client = MongoClient()
-    db = client['my_db']
-    collection = db.mongo_collection
-    return collection.find()
+    return mongo_collection.find()
