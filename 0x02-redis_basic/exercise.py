@@ -27,7 +27,7 @@ def call_history(method: Callable) -> Callable:
         """inner method"""
         key1 = method.__qualname__ + ':inputs'
         key2 = method.__qualname__ + ':outputs'
-        self._redis.lpush(key1, str(args))
+        self._redis.rpush(key1, str(args))
         output = method(self, *args, **kwargs)
         self._redis.rpush(key2, str(output))
         return output
