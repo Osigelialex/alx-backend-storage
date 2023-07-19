@@ -5,6 +5,19 @@ A module that writes string to redis
 import redis
 import uuid
 from typing import Union, Callable, Optional, Any
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    """count how many times methods of the Cache class are called"""
+    key = method.__qualname__
+
+    @wraps(method)
+    def count(self, *args, **kwargs):
+        """decorator"""
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+    return count 
 
 
 class Cache:
@@ -16,6 +29,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[int, float, str, bytes]) -> str:
         """
         stores data in redis using random key
