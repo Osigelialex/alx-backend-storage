@@ -24,6 +24,7 @@ class Cache:
         Args:
             data(string) - value to store in redis
         """
-        random_key = uuid.uuid1()
-        self._redis.set(random_key, data)
+        key = uuid.uuid4()
+        self._redis.set(key, data)
+        return key
 
