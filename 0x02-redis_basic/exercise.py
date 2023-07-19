@@ -8,10 +8,7 @@ import uuid
 
 class Cache:
     """
-    defines a cache class
-
-    functions:
-        store(data) - stores data in redis
+    cache class
     """
     def __init__(self):
         """initializes the Cache"""
@@ -21,10 +18,8 @@ class Cache:
     def store(self, data) -> str:
         """
         stores data in redis using random key
-
-        Args:
-            data(string) - value to store in redis
         """
-        key = str(uuid.uuid4())
-        self._redis.set(key, (data))
-        return key
+        key = uuid.uuid4()
+        self._redis.set(str(key), (data))
+        return str(key)
+
