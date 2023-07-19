@@ -25,11 +25,6 @@ class Cache:
         Args:
             data(string) - value to store in redis
         """
-        types = [str, int, float, bytes]
-        if not any(isinstance(data, i) for i in types):
-            data = str(data)
-
         key = str(uuid.uuid4())
         self._redis.set(key, (data))
         return key
-
