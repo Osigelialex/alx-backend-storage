@@ -64,3 +64,10 @@ class Cache:
     def get_str(self, key: bytes) -> str:
         """converts key to str type"""
         return str(key, 'UTF-8')
+
+    def replay(self, method: Callable) -> None:
+        """replays history of function"""
+        key = method.__qualname__
+        count = self.get_int(self._redis.get(key))
+        print(f"{key} was called {count} times")
+
