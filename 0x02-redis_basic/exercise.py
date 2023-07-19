@@ -4,6 +4,7 @@ A module that writes string to redis
 """
 import redis
 import uuid
+from typing import Union
 
 
 class Cache:
@@ -15,7 +16,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def store(self, data) -> str:
+    def store(self, data: Union[int, float, str, bytes]) -> str:
         """
         stores data in redis using random key
         """
