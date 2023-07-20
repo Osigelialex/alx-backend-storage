@@ -17,7 +17,8 @@ def count_calls(method: Callable) -> Callable:
         """decorator"""
         self._redis.incr(key)
         return method(self, *args, **kwargs)
-    return count 
+    return count
+
 
 def call_history(method: Callable) -> Callable:
     """stores the history of inputs and outputs for a function"""
@@ -32,6 +33,7 @@ def call_history(method: Callable) -> Callable:
         self._redis.rpush(key2, str(output))
         return output
     return inner
+
 
 class Cache:
     """
@@ -59,7 +61,7 @@ class Cache:
 
     def get_int(self, key: bytes) -> int:
         """converts key to int type"""
-        return int.from_bytes(key, "big")
+        return int(key)
 
     def get_str(self, key: bytes) -> str:
         """converts key to str type"""
@@ -68,6 +70,14 @@ class Cache:
     def replay(self, method: Callable) -> None:
         """replays history of function"""
         key = method.__qualname__
+        input_key = key + ':inputs'
+        output_key = key + ':outputs'
+        inputs = self._redis.lrange(input_key, 0, -1)
+        outputs = self._redis.lrange(output_key, 0, -1)
         count = self.get_int(self._redis.get(key))
-        print(f"{key} was called {count} times")
 
+        print(f"{key} was called {count} times")
+        for i, o in zip(inputs, outputs):
+            key_value = self.get_str(i)
+            output = self.get_str(o)
+            print(f"Cache.store(*('{key_value}',)) -> {output}")
