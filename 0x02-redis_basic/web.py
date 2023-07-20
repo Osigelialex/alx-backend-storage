@@ -9,17 +9,19 @@ from typing import Union
 
 def get_page(url: str) -> Union[str, None]:
     """obtains html content from url"""
-    r = redis.Redis()
-
+    redis_client = redis.Redis()
     response = requests.get(url)
     key = "count:" + url
 
-    if not r.get(key):
-        r.setex(key, 10,  0)
-    else:
-        r.incr(key)
-
     if response.status_code == 200:
-        return response.text
+        redis_client.setex('content', 10, response.text)
 
-    return None
+    if not redis_client.get(key):
+        redis_client.set(key, 10)
+    else:
+        redis_client.incr(key)
+
+    if redis_client.get('content'):
+        return redis_client.get('content')
+
+    return response.text
