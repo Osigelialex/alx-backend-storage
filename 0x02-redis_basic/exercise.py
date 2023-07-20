@@ -35,6 +35,24 @@ def call_history(method: Callable) -> Callable:
     return inner
 
 
+def replay(method: Callable) -> None:
+        """replays history of function"""
+        r = redis.Redis()
+        key = method.__qualname__
+        input_key = key + ':inputs'
+        output_key = key + ':outputs'
+        inputs = r.lrange(input_key, 0, -1)
+        outputs = r.lrange(output_key, 0, -1)
+        count = r.get(key)
+        conv = int(count) if count else 0
+
+        print(f"{key} was called {conv} times")
+        for i, o in zip(inputs, outputs):
+            key_value = str(i, 'UTF-8')
+            output = str(o, 'UTF-8')
+            print(f"Cache.store(*('{key_value}',)) -> {output}")
+
+
 class Cache:
     """
     cache class
@@ -66,19 +84,3 @@ class Cache:
     def get_str(self, key: bytes) -> str:
         """converts key to str type"""
         return str(key, 'UTF-8')
-
-    def replay(self, method: Callable) -> None:
-        """replays history of function"""
-        key = method.__qualname__
-        input_key = key + ':inputs'
-        output_key = key + ':outputs'
-        inputs = self._redis.lrange(input_key, 0, -1)
-        outputs = self._redis.lrange(output_key, 0, -1)
-        count = self._redis.get(key)
-        conv = int(count) if count else 0
-
-        print(f"{key} was called {conv} times")
-        for i, o in zip(inputs, outputs):
-            key_value = self.get_str(i)
-            output = self.get_str(o)
-            print(f"Cache.store(*('{key_value}',)) -> {output}")
