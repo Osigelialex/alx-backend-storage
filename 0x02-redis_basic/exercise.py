@@ -50,7 +50,7 @@ def replay(method: Callable) -> None:
     for i, o in zip(inputs, outputs):
         key_value = str(i, 'UTF-8')
         output = str(o, 'UTF-8')
-        print(f"Cache.store(*{key_value},) -> {output}")
+        print(f"Cache.store(*{key_value}) -> {output}")
 
 
 class Cache:
