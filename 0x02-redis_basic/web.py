@@ -7,20 +7,19 @@ import redis
 from typing import Union
 
 
-def get_page(url: str) -> Union[bytes, None]:
+def get_page(url: str) -> Union[str, None]:
     """obtains html content from url"""
     r = redis.Redis()
-    response = requests.get(url).content
+
+    response = requests.get(url)
     key = "count:" + url
 
     if not r.get(key):
-        r.set(key, 0)
-        r.set('content', response)
-        r.expire('content', 10)
+        r.setex(key, 10,  0)
     else:
         r.incr(key)
 
-    if r.get('content'):
-        return r.get('content')
+    if response.status_code == 200:
+        return response.text
 
-    return response
+    return None
