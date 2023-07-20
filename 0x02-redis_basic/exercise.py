@@ -74,9 +74,10 @@ class Cache:
         output_key = key + ':outputs'
         inputs = self._redis.lrange(input_key, 0, -1)
         outputs = self._redis.lrange(output_key, 0, -1)
-        count = self.get_int(self._redis.get(key))
+        count = self._redis.get(key)
+        conv = int(count) if count else 0
 
-        print(f"{key} was called {count} times")
+        print(f"{key} was called {conv} times")
         for i, o in zip(inputs, outputs):
             key_value = self.get_str(i)
             output = self.get_str(o)
